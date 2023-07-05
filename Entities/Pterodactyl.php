@@ -114,36 +114,4 @@ class Pterodactyl
 
         return Pterodactyl::api()->users->create($user)->json()['attributes'];
     }
-
-    public static function authPanel($user_id, $param = [])
-    {
-        $user = Pterodactyl::user();
-
-        if($user['root_admin']) {
-            return redirect()->back()->withError('You cannot automatically login to admin accounts.');
-        }
-
-        if($user['2fa']) {
-            return redirect()->back()->withError('Logging into accounts with 2 Factor Authentication enabled is not supported.');
-        }
-
-        $authMarkerData = [
-            'email' => $user['email'],
-            'secret_key' => env('SSO_SECRET_KEY')
-        ];
-
-        $key = env('SSO_SECRET_KEY');
-        if (strlen($key) !== 32) {
-            return redirect()->back()->withErrors(['sso_error' => 'Secret key length must be 32 characters.']);
-        }
-
-        $cipher = config('app.cipher');
-        $encrypter = new Encrypter($key, $cipher);
-        $token = json_encode($authMarkerData);
-        $param = json_encode($param);
-        $encryptedToken = $encrypter->encrypt($token);
-
-        header("Location: https://demo.wemx.net/sso-login?token=" . urlencode($encryptedToken) . '&param=' . urlencode($param));
-    }
-
 }

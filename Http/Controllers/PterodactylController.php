@@ -137,14 +137,4 @@ class PterodactylController extends Controller
 
         return redirect()->back()->with('success', 'Cancellation has been undone, your plan has been restarted');
     }
-
-    public function authPanel(Package $package, $server = '')
-    {
-        $param = [];
-        if (!empty($server)) {
-            $param['server'] = $server;
-        }
-
-        return Pterodactyl::authPanel(auth()->user()->id, $param);
-    }
 }

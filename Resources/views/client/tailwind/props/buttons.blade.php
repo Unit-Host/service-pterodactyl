@@ -18,9 +18,3 @@
 
 @includeIf(Theme::serviceView($order->service, 'props.renew-modal'), $order)
 @includeIf(Theme::serviceView($order->service, 'props.cancel-modal'), $order)
-
-<a target="_blank" href="{{ route('pterodactyl.login', ['server' => $order->uuid, 'package' => $order->package['id']]) }}"
-    class="py-2 px-3 flex items-center text-sm font-medium text-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-900">
-    <i class='bx bx-log-in mt-1 h-4 w-4 mr-1'></i>
-    Go to server
-</a>

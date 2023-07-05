@@ -13,4 +13,3 @@ use App\Services\Pterodactyl\Http\Controllers\PterodactylController;
 |
 */
 
-Route::get('/pterodactyl/login/{package}/{server?}', [PterodactylController::class, 'authPanel'])->name('pterodactyl.login')->middleware('auth');
