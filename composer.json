@@ -1,0 +1,23 @@
+{
+    "name": "wemx/pterodactyl",
+    "description": "",
+    "authors": [
+        {
+            "name": "Mubeen Mangla",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Services\\Pterodactyl\\": ""
+        }
+    }
+}

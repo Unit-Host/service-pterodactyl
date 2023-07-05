@@ -1,0 +1,15 @@
+{
+    "name": "Pterodactyl",
+    "alias": "Pterodactyl",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Services\\Pterodactyl\\Providers\\PterodactylServiceProvider"
+    ],
+    "aliases": {
+        "PterodactylLocation": "App\\Services\\Pterodactyl\\Entities\\Location",
+        "Pterodactyl": "App\\Services\\Pterodactyl\\Entities\\Pterodactyl"
+    },
+    "files": []
+}
