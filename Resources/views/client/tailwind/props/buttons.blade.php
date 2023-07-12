@@ -3,6 +3,7 @@
     'data' => $order->data,
 ])
 
+@if(request('page') !== 'manage')
 <a href="{{ route('service', ['order' => $order->id, 'page' => 'manage']) }}"
     class="py-2 px-3 flex items-center text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
@@ -14,6 +15,12 @@
             clip-rule="evenodd" />
     </svg>
     Manage
+</a>
+@endif
+
+<a href="{{ route('pterodactyl.login') }}" target="_blank" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+    <i class="bx bx-terminal font-xl mr-1"></i>
+    Login to Panel
 </a>
 
 @includeIf(Theme::serviceView($order->service, 'props.renew-modal'), $order)

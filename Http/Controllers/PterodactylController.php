@@ -4,10 +4,9 @@ namespace App\Services\Pterodactyl\Http\Controllers;
 
 use App\Services\Pterodactyl\Entities\Pterodactyl;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Routing\Controller;
 use App\Models\Payment;
-use App\Models\Package;
 use App\Models\Order;
 use Carbon\Carbon;
 
@@ -136,5 +135,33 @@ class PterodactylController extends Controller
         }
 
         return redirect()->back()->with('success', 'Cancellation has been undone, your plan has been restarted');
+    }
+
+    /**
+     * Redirect the user to Pterodactyl and log them in
+     */
+    public function loginPanel()
+    {
+        $url = settings('encrypted::pterodactyl::api_url') . '/sso-wemx';
+        $secret = settings('encrypted::pterodactyl::sso_secret');
+
+        $response = Http::get($url, [
+            'sso_secret' => $secret,
+            'user_id' => Pterodactyl::user()['id']
+        ]);
+
+        if (!$response->successful()){
+            $message = 'Something went wrong, please contact an administrator.';
+            try {
+                if (is_array($response->json()) && array_key_exists('message', $response->json())) {
+                    $message = $response->json()['message'];
+                }
+            } catch (\Exception $e) {
+                // Handle the exception here, if needed
+            }
+            return redirect()->back()->withError($message);
+        }
+
+        return redirect()->intended($response['redirect']);
     }
 }

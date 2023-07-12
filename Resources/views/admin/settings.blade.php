@@ -24,7 +24,7 @@
               <div class="row">
 
                 <div class="form-group col-6">
-                    <label>Pterodactyl URL</label>
+                    <label>Pterodactyl URL <a href="https://docs.wemx.net/en/third-party/pterodactyl#configuration" target="_blank">Documentation</a></label>
                     <input type="url" class="form-control" name="encrypted::pterodactyl::api_url" id="api_url" value="@settings('encrypted::pterodactyl::api_url')" required="">
                     <small class="form-text text-muted">
                         Enter the URL to your Pterodactyl panel to allow the API to communicate with Pterodactyl. Example: <code>https://panel.example.com</code>
@@ -40,10 +40,10 @@
                 </div>
 
                 <div class="form-group col-6">
-                  <label>Pterodactyl Client API Key</label>
-                  <input type="password" class="form-control" name="encrypted::pterodactyl::client_api" id="client_api" value="@settings('encrypted::pterodactyl::client_api')" required="">
+                  <label>Pterodactyl SSO Secret Key</label>
+                  <input type="password" class="form-control" name="encrypted::pterodactyl::sso_secret" id="sso_secret" value="@settings('encrypted::pterodactyl::sso_secret')">
                   <small class="form-text text-muted">
-                      You can generate a new api key on <code>https://panel.pterodactyl.com/account/api</code> Make sure you are an admin user.
+                      You can find more information on how to setup Pterodactyl SSO here: <a href="https://docs.wemx.net/en/third-party/pterodactyl#pterodactyl-sso" target="_blank">Documentation</a>
                   </small>
               </div>
 

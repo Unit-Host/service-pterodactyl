@@ -113,7 +113,7 @@
                 <label for="swap_limit">Swap</label>
                 <div class="input-group mb-2">
                     <input type="number" class="form-control text-right" name="swap_limit" id="swap_limit"
-                        min="0" value="{{ $package->data('swap_limit', 0) }}"
+                         value="{{ $package->data('swap_limit', 0) }}"
                         required />
                     <div class="input-group-append">
                         <div class="input-group-text">MB</div>

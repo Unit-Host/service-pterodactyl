@@ -13,3 +13,6 @@ use App\Services\Pterodactyl\Http\Controllers\PterodactylController;
 |
 */
 
+Route::prefix('pterodactyl')->group(function() {
+    Route::get('/login-to-panel', 'PterodactylController@loginPanel')->name('pterodactyl.login');
+});

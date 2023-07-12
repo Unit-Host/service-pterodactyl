@@ -12,7 +12,7 @@ class Pterodactyl
     /**
      * initize connection with Pterodactyl
      *
-     * @return ApplicationAPI
+     * @return PteroAPI
      */
     public static function api()
     {
@@ -83,7 +83,7 @@ class Pterodactyl
      */
     public static function createUser()
     {
-        $authUser = Auth::user(); 
+        $authUser = Auth::user();
 
         // check whether a user with same email as authenticated user already exists on Pterodactyl
         // this is mainly for users that are migrating over and have existing pterodactyl users

@@ -8,7 +8,6 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Package;
-use Gigabait\PteroApi\PteroApi;
 
 class PterodactylAdminController extends Controller
 {
@@ -52,7 +51,7 @@ class PterodactylAdminController extends Controller
             'location_id' => 'required',
             'stock' => 'numeric',
         ]);
-        
+
         $location = new Location;
         $location->name = request()->input('name');
         $location->country_code = request()->input('country_code');
@@ -77,7 +76,7 @@ class PterodactylAdminController extends Controller
             'location_id' => 'required',
             'stock' => 'numeric',
         ]);
-        
+
         $location->name = request()->input('name', $location->name);
         $location->country_code = request()->input('country_code');
         $location->location_id = request()->input('location_id', $location->id);
@@ -104,7 +103,7 @@ class PterodactylAdminController extends Controller
 
     /**
      * Retrieve laravels validation rules for env variables
-     * 
+     *
      * @return array
      */
     private function validationRules(Package $package): array
