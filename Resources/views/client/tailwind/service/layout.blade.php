@@ -1,5 +1,5 @@
 @extends(Theme::wrapper())
-@section('title', 'Dashboard')
+@section('title', __('client.dashboard'))
 
 {{-- Keywords for search engines --}}
 @section('keywords', 'WemX Dashboard, WemX Panel')
@@ -19,7 +19,7 @@
                                     d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                                 </path>
                             </svg>
-                            <span class="flex-1 ml-3 whitespace-nowrap">General</span>
+                            <span class="flex-1 ml-3 whitespace-nowrap">{!! __('client.general') !!}</span>
                             <span
                                 class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
                         </a>
@@ -37,7 +37,7 @@
                                     d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z">
                                 </path>
                             </svg>
-                            <span class="flex-1 ml-3 whitespace-nowrap">Invoices</span>
+                            <span class="flex-1 ml-3 whitespace-nowrap">{!! __('client.invoices') !!}</span>
                             <span
                                 class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                                 {{ $order->payments->where('user_id', auth()->user()->id)->count() }}</span>

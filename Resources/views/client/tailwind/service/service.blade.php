@@ -1,5 +1,5 @@
 @extends('pterodactyl::client.tailwind.service.layout')
-
+@section('title', __('client.services'))
 @section('content')
 
         <div id="service">
@@ -11,11 +11,11 @@
                 <div class="grid grid-cols-3 gap-4 mt-4">
                     <div
                         class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700 flex flex-col items-start justify-between">
-                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Package</h6>
+                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">{!! __('client.package') !!}</h6>
                         <div class="flex items-center text-gray-500 dark:text-gray-400">{{ $order->package['name'] }}</div>
                     </div>
                     <div class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700 flex flex-col justify-between">
-                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Billing cycle</h6>
+                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">{!! __('client.billing_cycle') !!}</h6>
                         <div class="flex items-center text-gray-500 dark:text-gray-400">
                             <span class="text-gray-500 dark:text-white font-bold mr-1"> {{ currency('symbol') }}{{ number_format($order->price['renewal_price'], 2) }}</span> /
                             {{ $order->period() }}
@@ -23,27 +23,27 @@
                     </div>
                     {{-- <div class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700">
                 <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Purchase date</h6>
-                <div class="flex items-center text-gray-500 dark:text-gray-400">{{ $order->created_at->format('d M Y') }}</div>
+                <div class="flex items-center text-gray-500 dark:text-gray-400">{{ $order->created_at->translatedFormat('d M Y') }}</div>
             </div> --}}
                     <div class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700">
-                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Status</h6>
-                        <span class="@if($order->status == 'active') bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 @elseif($order->status == 'suspended') bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 @elseif($order->status == 'cancelled') bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 @elseif($order->status == 'terminated') bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 @endif">{{ $order->status }}</span>
+                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">{!! __('client.status') !!}</h6>
+                        <span class="@if($order->status == 'active') bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 @elseif($order->status == 'suspended') bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 @elseif($order->status == 'cancelled') bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 @elseif($order->status == 'terminated') bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 @endif">{!! __('admin.' . $order->status) !!}</span>
                     </div>
                     <div class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700">
-                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Due date</h6>
+                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">{!! __('client.due_date') !!}</h6>
                         <div class="flex items-center text-gray-500 dark:text-gray-400">
-                            {{ $order->due_date->format('d M Y') }}</div>
+                            {{ $order->due_date->translatedFormat('d M Y') }}</div>
                     </div>
                     <div class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700">
-                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Last renewal date
+                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">{!! __('client.last_renewal_date') !!}
                         </h6>
                         <div class="flex items-center text-gray-500 dark:text-gray-400">
-                            {{ $order->last_renewed_at->format('d M Y') }}</div>
+                            {{ $order->last_renewed_at->translatedFormat('d M Y') }}</div>
                     </div>
                     <div class="relative p-3 bg-gray-100 rounded-lg dark:bg-gray-700">
-                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">Next Invoice</h6>
+                        <h6 class="mb-2 text-base leading-none font-medium text-gray-900 dark:text-white">{!! __('client.next_invoice') !!}</h6>
                         <div class="flex items-center text-gray-500 dark:text-gray-400">
-                            {{ $order->due_date->format('d M Y') }}</div>
+                            {{ $order->due_date->translatedFormat('d M Y') }}</div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3 mt-4">

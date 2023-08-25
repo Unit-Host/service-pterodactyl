@@ -1,4 +1,4 @@
-@extends(AdminTheme::wrapper(), ['title' => 'Dashboard', 'keywords' => 'WemX Dashboard, WemX Panel'])
+@extends(AdminTheme::wrapper(), ['title' => __('admin.pterodactyl_settings'), 'keywords' => 'WemX Dashboard, WemX Panel'])
 
 @section('css_libraries')
 <link rel="stylesheet" href="{{ asset(AdminTheme::assets('modules/summernote/summernote-bs4.css')) }}" />
@@ -17,40 +17,40 @@
         <div class="card">
             <form action="{{ route('admin.settings.store') }}" method="POST">
             <div class="card-header">
-              <h4>Pterodactyl Settings</h4>
+              <h4>{!! __('admin.pterodactyl_settings') !!}</h4>
             </div>
             <div class="card-body">
                 @csrf
               <div class="row">
 
                 <div class="form-group col-6">
-                    <label>Pterodactyl URL <a href="https://docs.wemx.net/en/third-party/pterodactyl#configuration" target="_blank">Documentation</a></label>
+                    <label>{!! __('admin.pterodactyl_url') !!} <a href="https://docs.wemx.net/en/third-party/pterodactyl#configuration" target="_blank">{!! __('admin.documentation') !!}</a></label>
                     <input type="url" class="form-control" name="encrypted::pterodactyl::api_url" id="api_url" value="@settings('encrypted::pterodactyl::api_url')" required="">
                     <small class="form-text text-muted">
-                        Enter the URL to your Pterodactyl panel to allow the API to communicate with Pterodactyl. Example: <code>https://panel.example.com</code>
+                        {!! __('admin.pterodactyl_url_desc') !!}
                     </small>
                 </div>
 
                 <div class="form-group col-6">
-                    <label>Pterodactyl API Key</label>
+                    <label>{!! __('admin.pterodactyl_api_key') !!}</label>
                     <input type="password" class="form-control" name="encrypted::pterodactyl::api_key" id="api_key" value="@settings('encrypted::pterodactyl::api_key')" required="">
                     <small class="form-text text-muted">
-                        You can generate a new api key on <code>https://panel.pterodactyl.com/admin/api</code> Make sure to give READ & WRITE permissions to all permissions
+                       {!! __('admin.pterodactyl_api_key_desc') !!}
                     </small>
                 </div>
 
                 <div class="form-group col-6">
-                  <label>Pterodactyl SSO Secret Key</label>
+                  <label>{!! __('admin.pterodactyl_sso_key') !!}</label>
                   <input type="password" class="form-control" name="encrypted::pterodactyl::sso_secret" id="sso_secret" value="@settings('encrypted::pterodactyl::sso_secret')">
                   <small class="form-text text-muted">
-                      You can find more information on how to setup Pterodactyl SSO here: <a href="https://docs.wemx.net/en/third-party/pterodactyl#pterodactyl-sso" target="_blank">Documentation</a>
+                      {!! __('admin.pterodactyl_sso_key_desc') !!} <a href="https://docs.wemx.net/en/third-party/pterodactyl#pterodactyl-sso" target="_blank">{!! __('admin.documentation') !!}</a>
                   </small>
               </div>
 
               </div>
             </div>
             <div class="card-footer text-right">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">{!! __('admin.submit') !!}</button>
             </div>
           </div>
         </form>

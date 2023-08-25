@@ -1,5 +1,5 @@
 @extends('pterodactyl::client.tailwind.service.layout')
-
+@section('title', __('client.invoices'))
 @section('content')
 <section class="dark:bg-gray-900">
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -8,36 +8,36 @@
 
                 <li class=" mr-2 lg:mr-4">
                     <a href="{{ url()->current() }}" class="@if(request()->input('where', 'paid') == 'paid') inline-block px-4 py-2 text-white rounded-full bg-primary-600 @else inline-block px-4 py-2 border rounded-full dark:bg-gray-700 dark:border-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white  @endif">
-                      Paid
+                        {!! __('client.paid') !!}
                     </a>
                   </li>
 
                 <li class=" mr-2 lg:mr-4">
                     <a href="{{ url()->current() }}?where=unpaid" class="@if(request()->input('where', 'paid') == 'unpaid') inline-block px-4 py-2 text-white rounded-full bg-primary-600 @else inline-block px-4 py-2 border rounded-full dark:bg-gray-700 dark:border-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white  @endif" aria-current="page">
-                      Unpaid
+                        {!! __('client.unpaid') !!}
                     </a>
                   </li>
-                
+
               </ul>
         </div>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        Description
+                        {!! __('client.description') !!}
                     </th>
                     <th scope="col" class="px-6 py-3">
                         <div class="flex items-center">
-                            Amount
+                            {!! __('client.amount') !!}
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
                         <div class="flex items-center">
-                            Date
+                            {!! __('client.date') !!}
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <span class="sr-only">Actions</span>
+                        <span class="sr-only">{!! __('client.actions') !!}</span>
                     </th>
                 </tr>
             </thead>
@@ -52,12 +52,13 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="pl-3">
-                            <div class="text-base font-semibold text-sm">{{ Auth::user()->created_at->format('d M Y') }}</div>
+                            <div class="text-base font-semibold text-sm">{{ Auth::user()->created_at->translatedFormat('d M Y') }}</div>
                             <div class="font-normal text-gray-500">{{ Auth::user()->created_at->diffForHumans() }}</div>
                         </div>
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <a href="{{ route('invoice', ['payment' => $payment->id]) }}" target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Invoice</a>
+                        <a href="{{ route('invoice', ['payment' => $payment->id]) }}" target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                            {!! __('client.invoice') !!}</a>
                     </td>
                 </tr>
             @endforeach

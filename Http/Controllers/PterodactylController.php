@@ -78,14 +78,17 @@ class PterodactylController extends Controller
         $payment = Payment::generate([
             'order_id' => $order->id,
             'user_id' => $order->user_id,
-            'description' => 'Renewal ' . $order->name. ' ['. $order->due_date->format(settings('date_format', 'd M Y')) . ' - '. $order->due_date->addDays($period)->format(settings('date_format', 'd M Y')). ']',
+            'description' => __('admin.ptero_renewal_desc', [
+                'name' => $order->name,
+                'param' => $order->due_date->translatedFormat(settings('date_format', 'd M Y')),
+                'add_days_period' => $order->due_date->addDays($period)->translatedFormat(settings('date_format', 'd M Y'))]),
             'amount' => $price,
             'due_date' => $order->due_date,
             'options' => ['period' => $period],
             'handler' => config($order->service. '.handlers.renewal')
         ]);
 
-        return redirect()->route('invoice', ['payment' => $payment->id])->with('success', 'Invoice has been generated successfully');
+        return redirect()->route('invoice', ['payment' => $payment->id])->with('success', __('admin.invoice_generated_successfully'));
     }
 
     /**
@@ -93,13 +96,13 @@ class PterodactylController extends Controller
     */
     public function cancel(Order $order)
     {
-        $validated = request()->validate([
+        request()->validate([
             'cancelled_at' => 'required',
             'cancel_reason' => 'max:255',
         ]);
 
         if($order->status == 'cancelled') {
-            return redirect()->back()->with('error', 'This service was already cancelled');
+            return redirect()->back()->with('error', __('admin.service_already_cancelled'));
         }
 
         if($order->price['cancellation_fee'] > 0)
@@ -114,11 +117,12 @@ class PterodactylController extends Controller
                 'handler' => config($order->service. '.handlers.cancel')
             ]);
 
-            return redirect()->route('invoice.pay', ['payment' => $payment->id, 'gateway' => request()->input('gateway')])->with('success', 'Please pay the cancellation fee to cancel your service.');
+            return redirect()->route('invoice.pay', ['payment' => $payment->id, 'gateway' => request()->input('gateway')])->with('success',
+                __('admin.pay_cancellation_fee_cancel_service'));
         }
 
         $order->cancel(request()->input('cancelled_at'), request()->input('cancel_reason'));
-        return redirect()->back()->with('success', 'Your service was cancelled');
+        return redirect()->back()->with('success', __('admin.your_service_was_cancelled'));
     }
 
     /**
@@ -134,7 +138,7 @@ class PterodactylController extends Controller
             $order->save();
         }
 
-        return redirect()->back()->with('success', 'Cancellation has been undone, your plan has been restarted');
+        return redirect()->back()->with('success', __('admin.undo_canceled_resp'));
     }
 
     /**
@@ -151,7 +155,7 @@ class PterodactylController extends Controller
         ]);
 
         if (!$response->successful()){
-            $message = 'Something went wrong, please contact an administrator.';
+            $message = __('admin.panel_login_mess');
             try {
                 if (is_array($response->json()) && array_key_exists('message', $response->json())) {
                     $message = $response->json()['message'];
@@ -159,7 +163,7 @@ class PterodactylController extends Controller
             } catch (\Exception $e) {
                 // Handle the exception here, if needed
             }
-            return redirect()->back()->withError($message);
+            return redirect()->back()->with('error',$message);
         }
 
         return redirect()->intended($response['redirect']);

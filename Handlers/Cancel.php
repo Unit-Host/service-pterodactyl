@@ -15,8 +15,8 @@ class Cancel extends ServiceHandler
     {
         $order = Order::findOrFail($payment->order_id);
         $order->cancel($payment->options['cancelled_at'], $payment->options['cancel_reason']);
-        
-        return redirect()->back()->with('success', 'Your service was cancelled');
+
+        return redirect()->back()->with('success', __('admin.your_service_was_cancelled'));
     }
 
     /**

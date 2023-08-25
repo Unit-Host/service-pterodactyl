@@ -11,5 +11,5 @@
         "PterodactylLocation": "App\\Services\\Pterodactyl\\Entities\\Location",
         "Pterodactyl": "App\\Services\\Pterodactyl\\Entities\\Pterodactyl"
     },
-    "files": []
+    "files": ["helpers.php"]
 }
