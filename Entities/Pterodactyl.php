@@ -103,6 +103,7 @@ class Pterodactyl
         // check whether a user with same email as authenticated user already exists on Pterodactyl
         // this is mainly for users that are migrating over and have existing pterodactyl users
         $user = Pterodactyl::api()->users->all("?filter[email]=" . $authUser->email);
+//        $user = Pterodactyl::api()->users->getExternal("wmx-" . $authUser->id);
         if (isset($user['data'][0]['attributes'])) {
 
             // edit this users external id so next call it gets easier.

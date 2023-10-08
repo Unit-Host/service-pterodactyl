@@ -113,6 +113,7 @@ class Server
             "limits" => $this->getLimits(),
             "allocation" => $this->getAllocationsIds(),
             "feature_limits" => $this->getFeatureLimits(),
+            'start_on_completion' => true,
         ];
     }
 
@@ -165,7 +166,7 @@ class Server
                     $this->port_count = $this->port_count + 1;
                     break;
                 case 'USERNAME':
-                    $env[$key] = auth()->user->name;
+                    $env[$key] = auth()->user()->username;
                     break;
                 case 'RANDOM_TEXT':
                     $env[$key] = Str::random(10);

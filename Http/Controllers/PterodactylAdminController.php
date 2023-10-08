@@ -2,6 +2,7 @@
 
 namespace App\Services\Pterodactyl\Http\Controllers;
 
+use App\Facades\AdminTheme;
 use App\Services\Pterodactyl\Entities\Egg;
 use App\Services\Pterodactyl\Entities\Pterodactyl;
 use App\Services\Pterodactyl\Entities\Location;
@@ -24,7 +25,7 @@ class PterodactylAdminController extends Controller
     public function admin(): Renderable
     {
         $locations = Location::query()->get();
-        return view('pterodactyl::admin.settings', compact('locations'));
+        return view(AdminTheme::serviceView('pterodactyl', 'settings'), compact('locations'));
     }
 
     /**
@@ -36,7 +37,7 @@ class PterodactylAdminController extends Controller
     {
         $pterodactyl_locations = Pterodactyl::api()->locations->all()['data'];
         $locations = Location::query()->paginate(15);
-        return view('pterodactyl::admin.locations', compact('locations', 'pterodactyl_locations'));
+        return view(AdminTheme::serviceView('pterodactyl', 'locations'), compact('locations', 'pterodactyl_locations'));
     }
 
     /**
@@ -123,7 +124,7 @@ class PterodactylAdminController extends Controller
     public function nodes(): Renderable
     {
         $nodes = Node::getApiNodes();
-        return view('pterodactyl::admin.nodes', compact('nodes'));
+        return view(AdminTheme::serviceView('pterodactyl', 'nodes'), compact('nodes'));
     }
 
     public function storeNode(): RedirectResponse
@@ -150,21 +151,25 @@ class PterodactylAdminController extends Controller
     public function eggs(): Renderable
     {
         $eggs = Egg::getAll();
-        return view('pterodactyl::admin.eggs', compact('eggs'));
+        return view(AdminTheme::serviceView('pterodactyl', 'eggs'), compact('eggs'));
     }
 
     public function eggManage($egg)
     {
         $eggData = Egg::getOne($egg);
-
         $egg = Egg::query()->firstOrCreate(
             ['egg_id' => $eggData['id']],
             ['egg_id' => $eggData['id'], 'nest_id' => $eggData['nest'], 'variables' => $eggData['variables']]
         );
-        $keys = array_keys($eggData['variables']);
-        $values = array_intersect_key($egg->variables, $eggData['variables']);
-        $egg->variables = array_combine($keys, $values);
-        return view('pterodactyl::admin.eggs_manage', compact('egg'));
+
+        $data = $egg->variables;
+        foreach ($eggData['variables'] as $key => $value) {
+            if (!array_key_exists($key, $data)){
+                $data[$key] = $value;
+            }
+        }
+        $egg->variables = $data;
+        return view(AdminTheme::serviceView('pterodactyl', 'eggs_manage'), compact('egg'));
     }
 
     public function eggManageStore()
@@ -174,7 +179,7 @@ class PterodactylAdminController extends Controller
 
         $newData = request()->except(['_token', 'egg_id', 'var_id']);
         $variables = array_replace($eggData['variables'], $egg->variables);
-        foreach ($variables as $key => $var){
+        foreach ($variables as $key => $var) {
             if (array_key_exists($var['env_variable'], $newData)) {
                 $variables[$key]['default_value'] = $newData[$var['env_variable']];
                 continue;

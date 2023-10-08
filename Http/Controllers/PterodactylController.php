@@ -2,6 +2,7 @@
 
 namespace App\Services\Pterodactyl\Http\Controllers;
 
+use App\Facades\Theme;
 use App\Services\Pterodactyl\Entities\Pterodactyl;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Http;
@@ -44,7 +45,7 @@ class PterodactylController extends Controller
      */
     public function manage(Order $order)
     {
-        return view('pterodactyl::client.tailwind.service.service', compact('order'));
+        return view(Theme::serviceView('pterodactyl', 'service.service'), compact('order'));
     }
 
     /**
@@ -53,7 +54,7 @@ class PterodactylController extends Controller
      */
     public function invoices(Order $order)
     {
-        return view('pterodactyl::client.tailwind.service.invoices', compact('order'));
+        return view(Theme::serviceView('pterodactyl', 'service.invoices'), compact('order'));
     }
 
     /**
@@ -101,7 +102,7 @@ class PterodactylController extends Controller
             'cancel_reason' => 'max:255',
         ]);
 
-        if($order->status == 'cancelled') {
+        if($order->status !== 'active') {
             return redirect()->back()->with('error', __('admin.service_already_cancelled'));
         }
 

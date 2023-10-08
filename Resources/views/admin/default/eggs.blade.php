@@ -1,4 +1,4 @@
-@extends(AdminTheme::wrapper(), ['title' => __('admin.eggs'), 'keywords' => 'WemX Dashboard, WemX Panel'])
+@extends(AdminTheme::wrapper(), ['title' => __('admin.eggs.blade.php'), 'keywords' => 'WemX Dashboard, WemX Panel'])
 
 @section('css_libraries')
     <link rel="stylesheet" href="{{ asset(AdminTheme::assets('modules/summernote/summernote-bs4.css')) }}"/>
@@ -44,7 +44,8 @@
                                 <td>{{ count($egg['variables']) }}</td>
 
                                 <td class="text-right">
-                                    <a class="btn btn-primary" href="{{ route('pterodactyl.egg_manage', ['egg' => $egg['id']]) }}">
+                                    <a class="btn btn-primary"
+                                       href="{{ route('pterodactyl.egg_manage', ['egg' => $egg['id']]) }}">
                                         {!! __('admin.manage') !!}
                                     </a>
                                 </td>

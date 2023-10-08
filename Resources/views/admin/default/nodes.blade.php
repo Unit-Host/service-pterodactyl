@@ -34,6 +34,7 @@
                             <th>{!! __('admin.auto_ports') !!}</th>
                             <th>{!! __('admin.ports_range') !!}</th>
                             <th>{!! __('admin.ip') !!}</th>
+                            <th>{!! __('admin.location_id') !!}</th>
                             <th class="text-right">{!! __('admin.actions') !!}</th>
                         </tr>
                         </thead>
@@ -51,6 +52,7 @@
                                 <td>@if($nodeModel->auto_ports == 1) {!! __('admin.active') !!}@else {!! __('admin.inactive') !!}@endif</td>
                                 <td>{{ $nodeModel->getPortRange() }}</td>
                                 <td>{{ $nodeModel->getIp() }}</td>
+                                <td>{{ $nodeModel->location_id }}</td>
 
                                 <td class="text-right">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
