@@ -19,7 +19,7 @@ Route::post('/locations/create', [PterodactylAdminController::class, 'store'])->
 Route::post('/locations/{location}/update', [PterodactylAdminController::class, 'update'])->name('pterodactyl.locations.update')->middleware('permission');
 
 Route::get('/nodes', [PterodactylAdminController::class, 'nodes'])->name('pterodactyl.nodes')->middleware('permission');
-Route::post('/nodes', [PterodactylAdminController::class, 'storeNode'])->name('pterodactyl.nodes')->middleware('permission');
+Route::post('/nodes/store', [PterodactylAdminController::class, 'storeNode'])->name('pterodactyl.nodes.store')->middleware('permission');
 
 Route::get('/eggs', [PterodactylAdminController::class, 'eggs'])->name('pterodactyl.eggs')->middleware('permission');
 Route::get('/eggs/manage/{egg}', [PterodactylAdminController::class, 'eggManage'])->name('pterodactyl.egg_manage')->middleware('permission');

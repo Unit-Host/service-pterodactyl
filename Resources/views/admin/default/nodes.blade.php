@@ -75,7 +75,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form action="{{route('pterodactyl.nodes')}}" method="POST">
+                                        <form action="{{route('pterodactyl.nodes.store')}}" method="POST">
                                             @csrf
                                             <input type="hidden" name="node_id" value="{{ $node['id'] }}">
                                             <input type="hidden" name="location_id" value="{{ $node['location_id'] }}">
