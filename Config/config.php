@@ -6,7 +6,7 @@ return [
     'icon' => 'https://imgur.png',
     'author' => 'WemX',
     'version' => '1.0.0',
-    'wemx_version' => '1.4.0',
+    'wemx_version' => '1.7.2',
 
     'service' => \App\Services\Pterodactyl\Service::class,
     'controller' => \App\Services\Pterodactyl\Http\Controllers\PterodactylController::class,
