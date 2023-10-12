@@ -23,7 +23,7 @@ class Pterodactyl
             app()->make('redirect')->to('/admin/pterodactyl')->with('error', 'Please setup your Pterodactyl Panel API credentials')->send();
         }
 
-        return new PteroApi(settings('encrypted::pterodactyl::api_key'), settings('encrypted::pterodactyl::api_url'));
+        return new PteroApi(settings('encrypted::pterodactyl::api_key'), rtrim(settings('encrypted::pterodactyl::api_url'), '/'));
     }
 
     /**
