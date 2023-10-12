@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Package;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Http;
 
 class PterodactylAdminController extends Controller
 {
@@ -200,4 +201,40 @@ class PterodactylAdminController extends Controller
         $items = ['Nodes', 'Eggs', 'Pterodactyl'];
         return redirect()->back()->with('success', __('admin.clear_pterodactyl_cache', ['items' => implode(', ', $items)]));
     }
+
+
+    public function checkApiAvailability()
+    {
+        $url = rtrim(settings('encrypted::pterodactyl::api_url'));
+        $secret = settings('encrypted::pterodactyl::sso_secret', null);
+        $resp['status'] = false;
+        try {
+            $resp = [
+                'status' => Http::head($url)->successful(),
+                'url' => 'URL is ' . (Http::head($url)->successful() ? 'available' : 'not available'),
+                'api' => Pterodactyl::api()->checkAuthorization(),
+                'sso' => $secret ? $this->checkSsoAuthorization($url, $secret) : 'Not configured'
+            ];
+        } catch (\Exception $e) {
+            $resp = ['url' => 'Error: ' . $e->getMessage()];
+        }
+
+        return redirect()->back()->with(['resp' => $resp]);
+    }
+
+    protected function checkSsoAuthorization($url, $secret)
+    {
+        $sso = Http::get($url . '/sso-wemx', [
+            'sso_secret' => $secret,
+            'user_id' => 1
+        ]);
+        if ($sso->successful()) {
+            return array_key_exists('message', $sso->json()) ? $sso->json()['message'] : 'Authorized';
+        } elseif ($sso->getStatusCode() == 501) {
+            return ($sso->json()['message'] == 'You cannot automatically login to admin accounts.' ? 'Authorized' : $sso->json()['message']) ?? 'Unknown error';
+        }
+        return 'Not Authorized';
+    }
+
+
 }

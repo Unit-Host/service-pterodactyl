@@ -14,6 +14,8 @@ use App\Services\Pterodactyl\Http\Controllers\PterodactylAdminController;
 
 Route::get('/', [PterodactylAdminController::class, 'admin'])->name('pterodactyl.index')->middleware('permission');
 
+Route::get('/test-api', [PterodactylAdminController::class, 'checkApiAvailability'])->name('pterodactyl.test-api')->middleware('permission');
+
 Route::get('/locations', [PterodactylAdminController::class, 'locations'])->name('pterodactyl.locations')->middleware('permission');
 Route::post('/locations/create', [PterodactylAdminController::class, 'store'])->name('pterodactyl.locations.store')->middleware('permission');
 Route::post('/locations/{location}/update', [PterodactylAdminController::class, 'update'])->name('pterodactyl.locations.update')->middleware('permission');

@@ -12,6 +12,14 @@
 @endsection
 
 @section('container')
+    @if(session('resp'))
+        <div class="alert @if(session('resp')['status']) alert-success @else alert-danger @endif">
+            <p>Status: {{ session('resp')['status'] ? 'True' : 'False' }}</p>
+            <p>URL: {{ session('resp')['url'] }}</p>
+            <p>API: {{ session('resp')['api'] ? 'Authorized' : 'Not Authorized' }}</p>
+            <p>SSO: {{ session('resp')['sso'] }}</p>
+        </div>
+    @endif
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -50,6 +58,7 @@
               </div>
             </div>
             <div class="card-footer text-right">
+                <a href="{{ route('pterodactyl.test-api') }}" class="btn btn-primary">{!! __('admin.test_connection') !!}</a>
               <button type="submit" class="btn btn-primary">{!! __('admin.submit') !!}</button>
             </div>
           </div>
