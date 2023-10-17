@@ -35,50 +35,6 @@ class Service
         if ($this->location()->stock !== -1) {
             $this->location()->decrement('stock', 1);
         }
-
-
-//        $egg = Egg::query()->where('egg_id', $this->egg()->id)->first();
-//        $environment = $egg->env($egg->env($this->option('environment', [])));
-//
-//        try {
-//            $server = Pterodactyl::api()->servers->create([
-//                'external_id' => (string) "wmx-". $this->order->id,
-//                "name" => $this->order->name,
-//                "user" => Pterodactyl::user($this->order->user)['id'],
-//                "egg" => $egg->egg_id,
-//                'oom_disabled' => ($this->package('OOM_KILLER', false)) ? true : false,
-//                "docker_image" => $this->egg()->docker_image,
-//                "startup" => $this->package('startup', $this->egg()->startup),
-//                "environment" => array_merge($this->package('environment'), $this->option('environment', [])),
-//                "limits" => [
-//                    "memory" => $this->package('memory_limit', 0),
-//                    "swap" => $this->package('swap', 0),
-//                    "disk" => $this->package('disk_limit', 0),
-//                    "io" => $this->package('block_io_weight', 500),
-//                    "cpu" => $this->package('cpu_limit', 100),
-//                ],
-//                "feature_limits" => [
-//                    "databases" => $this->package('database_limit', 0),
-//                    "backups" => $this->package('backup_limit', 0),
-//                    "allocations" => $this->package('allocation_limit', 0),
-//                ],
-//                'deploy' => [
-//                    'locations' => [$this->location()->location_id],
-//                    'dedicated_ip' => false,
-//                    'port_range' => $this->package('port_range', []),
-//                ],
-//            ])->json();
-
-
-//        } catch(\Exception $error) {
-//            ErrorLog::create([
-//                'user_id' => $this->order->user->id,
-//                'order_id' => $this->order->id,
-//                'source' => 'Pterodactyl Server Creation',
-//                'severity' => 'CRITICAL',
-//                'message' => "Failed to connect to Pterodactyl. Make sure the Ptero API details are correct. Error: ". $error->getMessage(),
-//            ]);
-//        }
     }
 
     /**
