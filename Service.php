@@ -78,7 +78,7 @@ class Service
      */
     public static function setPackageConfig()
     {
-        return collect([
+        return collect(array_merge([
             [
                 "col" => "col-4",
                 "key" => "database_limit",
@@ -202,7 +202,7 @@ class Service
                 "type" => "text",
                 "rules" => ['nullable'],
             ],
-        ]);
+        ], self::getVariables()));
     }
 
     protected static function getLocations()
@@ -217,6 +217,22 @@ class Service
         return Pterodactyl::getEggs()->pluck('attributes')->mapWithKeys(function ($egg) {
             return [$egg['id'] => $egg['name']];
         });
+    }
+
+    protected static function getVariables(): array
+    {
+        $egg = Egg::getOne(1);
+    
+        return collect($egg['variables'])->map(function ($variable) {
+            return [
+                "key" => $variable['env_variable'],
+                "name" => $variable['name'],
+                "description" => $variable['description'],
+                "type" => "text",
+                "default_value" => $variable['default_value'],
+                "rules" => explode('|', $variable['rules']),
+            ];
+        })->toArray();
     }
 
     /**
