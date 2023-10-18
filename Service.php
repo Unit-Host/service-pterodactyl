@@ -221,7 +221,8 @@ class Service
 
     protected static function getVariables(): array
     {
-        $egg = Egg::getOne(1);
+        $egg_id = request()->package->data('egg') ?? 1;
+        $egg = Egg::getOne($egg_id);
     
         return collect($egg['variables'])->map(function ($variable) {
             return [
