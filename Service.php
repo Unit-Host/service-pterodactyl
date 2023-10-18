@@ -30,7 +30,7 @@ class Service
         return (object)
         [
           'display_name' => 'Pterodactyl',
-          'autor' => 'WemX',
+          'author' => 'WemX',
           'version' => '1.0.0',
           'wemx_version' => ['dev', '>=1.8.0'],
         ];
@@ -209,7 +209,7 @@ class Service
     {
         return Location::all()->mapWithKeys(function ($location) {
             return [$location->id => $location->name];
-        });    
+        });
     }
 
     protected static function getEggs()
