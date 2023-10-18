@@ -170,7 +170,6 @@ class Service
                 "multiple" => true,
                 "rules" => ['required'],
             ],
-
             [
                 "key" => "egg",
                 "name" => __('admin.egg'),
@@ -178,7 +177,31 @@ class Service
                 "type" => "select",
                 "options" => self::getEggs(),
                 "rules" => ['required'],
-            ], 
+            ],
+            [
+                "key" => "docker_image",
+                "name" => __('admin.docker_image'),
+                "description" =>  __('admin.docker_image_desc'),
+                "type" => "text",
+                "rules" => ['required'],
+            ],
+            [
+                "key" => "excluded_variables[]",
+                "name" => __('admin.exclude_variables_checkout'),
+                "description" =>  __('admin.exclude_variables_checkout_desc'),
+                "type" => "select",
+                "options" => [],
+                "multiple" => true,
+                "rules" => ['nullable'],
+            ],
+            [
+                "col" => "col-12",
+                "key" => "startup_command",
+                "name" => __('admin.startup_command'),
+                "description" =>  __('admin.startup_command_desc'),
+                "type" => "text",
+                "rules" => ['nullable'],
+            ],
         ]);
     }
 
