@@ -36,7 +36,12 @@ class PterodactylAdminController extends Controller
      */
     public function locations(): Renderable
     {
-        $pterodactyl_locations = Pterodactyl::api()->locations->all()['data'];
+        try {
+            $pterodactyl_locations = Pterodactyl::api()->locations->all()['data'];
+        } catch (\Exception $e){
+            $pterodactyl_locations = [];
+            request()->session()->flash('error', '[Pterodactyl] An error occurred while trying to get locations, check if the locations in the pterodactyl panel have been created');
+        }
         $locations = Location::query()->paginate(15);
         return view(AdminTheme::serviceView('pterodactyl', 'locations'), compact('locations', 'pterodactyl_locations'));
     }
@@ -124,7 +129,13 @@ class PterodactylAdminController extends Controller
      */
     public function nodes(): Renderable
     {
-        $nodes = Node::getApiNodes();
+
+        try {
+            $nodes = Node::getApiNodes();
+        } catch (\Exception $e){
+            $nodes = [];
+            request()->session()->flash('error', $e->getMessage());
+        }
         return view(AdminTheme::serviceView('pterodactyl', 'nodes'), compact('nodes'));
     }
 
@@ -151,7 +162,13 @@ class PterodactylAdminController extends Controller
 
     public function eggs(): Renderable
     {
-        $eggs = Egg::getAll();
+
+        try {
+            $eggs = Egg::getAll();
+        } catch (\Exception $e){
+            $eggs = [];
+            request()->session()->flash('error', $e->getMessage());
+        }
         return view(AdminTheme::serviceView('pterodactyl', 'eggs'), compact('eggs'));
     }
 
