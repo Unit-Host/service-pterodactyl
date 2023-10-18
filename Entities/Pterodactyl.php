@@ -29,10 +29,10 @@ class Pterodactyl
     /**
      * Return all available eggs
      *
-     * @return array
+     * @return collection
      * @throws BindingResolutionException
      */
-    public static function getEggs(): array
+    public static function getEggs()
     {
         $eggs = [];
         $nests = Pterodactyl::api()->nests->all()->json();
@@ -44,7 +44,7 @@ class Pterodactyl
             $eggs = array_merge($eggs, $nested_eggs['data']);
         }
 
-        return $eggs;
+        return collect($eggs);
     }
 
     /**
