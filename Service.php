@@ -108,6 +108,7 @@ class Service implements ServiceInterface
             'onclick' => 'copy',
             "color" => "primary",
         ];
+
         return [$login_to_panel, $server_ip];
     }
 
