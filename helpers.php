@@ -31,3 +31,10 @@ if (!function_exists('pterodactyl')) {
         return \App\Services\Pterodactyl\Entities\Pterodactyl::class;
     }
 }
+
+if (!function_exists('getPteroServerIp')) {
+    function getPteroServerIp($order_id)
+    {
+        return \App\Services\Pterodactyl\Entities\Pterodactyl::serverIP($order_id);
+    }
+}

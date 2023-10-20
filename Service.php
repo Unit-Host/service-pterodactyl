@@ -17,13 +17,13 @@ class Service implements ServiceInterface
     private Order $order;
 
     /**
-     * Unique key used to store settings 
+     * Unique key used to store settings
      * for this service.
-     * 
+     *
      * @return string
      */
     public static $key = 'pterodactyl';
-    
+
     public function __construct(Order $order)
     {
         $this->order = $order;
@@ -81,7 +81,7 @@ class Service implements ServiceInterface
      */
     public static function setCheckoutConfig(): array
     {
-        return [];    
+        return [];
     }
 
     /**
@@ -92,6 +92,7 @@ class Service implements ServiceInterface
     public static function setServiceButtons(): array
     {
         $login_to_panel = settings('encrypted::pterodactyl::sso_secret') ? [
+            "type" => 'default',
             "name" => __('client.login_to_panel'),
             "icon" => '<i class="bx bx-terminal"></i>',
             "color" => "primary",
@@ -100,13 +101,16 @@ class Service implements ServiceInterface
         ] : [];
 
         $server_ip = [
-            "name" => '123.456.83.231',
+            "type" => 'function',
+            'function' => 'getPteroServerIp',
+            'arg' => '$order->id',
+            "name" => 'response',
+            'onclick' => 'copy',
             "color" => "primary",
         ];
-
-        return [$login_to_panel, $server_ip];    
+        return [$login_to_panel, $server_ip];
     }
-    
+
     /**
      * This function is responsible for creating an instance of the
      * service. This can be anything such as a server, vps or any other instance.
