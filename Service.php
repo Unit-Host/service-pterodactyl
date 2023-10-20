@@ -203,7 +203,7 @@ class Service implements ServiceInterface
      *
      * @return void
      */
-    public function terminate(array $data = [])
+    public function terminate(array $data = []): void
     {
         try {
             $server = $this->server();
