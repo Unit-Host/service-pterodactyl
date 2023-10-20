@@ -101,13 +101,11 @@ class Service implements ServiceInterface
         ] : [];
 
         $server_ip = [
-            "type" => 'function',
-            'function' => 'getPteroServerIp',
-            'arg' => '$order->id',
-            "name" => 'response',
-            'onclick' => 'copy',
+            "type" => 'default',
+            "name" => Pterodactyl::serverIP(request()->order->id) ?? '127.0.0.1',
             "color" => "primary",
         ];
+
         return [$login_to_panel, $server_ip];
     }
 
