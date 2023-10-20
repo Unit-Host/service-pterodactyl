@@ -203,10 +203,15 @@ class Service implements ServiceInterface
      *
      * @return void
      */
-    public function terminate(array $data = []): void
+    public function terminate(array $data = [])
     {
-        $server = $this->server();
-        Pterodactyl::api()->servers->delete($server['id']);
+        try {
+            $server = $this->server();
+            Pterodactyl::api()->servers->delete($server['id']);
+        } catch (\Exception $e){
+            request()->session()->flash('error' , $e->getMessage());
+        }
+
     }
 
     /**
