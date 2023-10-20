@@ -103,7 +103,7 @@ class Service implements ServiceInterface
         $server_ip = [
             "type" => 'function',
             'function' => 'getPteroServerIp',
-            'arg' => '$order->id',
+            'arg' => 'id', # order property
             "name" => 'response',
             'onclick' => 'copy',
             "color" => "primary",
