@@ -2,6 +2,7 @@
 
 namespace App\Services\Pterodactyl;
 
+use App\Services\ServiceInterface;
 use App\Services\Pterodactyl\Entities\Egg;
 use App\Services\Pterodactyl\Entities\Pterodactyl;
 use App\Services\Pterodactyl\Entities\Location;
@@ -11,15 +12,101 @@ use App\Models\ErrorLog;
 use App\Services\Pterodactyl\Entities\Server;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
-class Service
+class Service implements ServiceInterface
 {
     private Order $order;
 
+    /**
+     * Unique key used to store settings 
+     * for this service.
+     * 
+     * @return string
+     */
+    public static $key = 'pterodactyl';
+    
     public function __construct(Order $order)
     {
         $this->order = $order;
     }
 
+    /**
+     * Returns the meta data about this Server/Service
+     *
+     * @return object
+     */
+    public static function metaData(): object
+    {
+        return (object)
+        [
+          'display_name' => 'Pterodactyl',
+          'autor' => 'WemX',
+          'version' => '1.0.0',
+          'wemx_version' => ['*'],
+        ];
+    }
+
+    /**
+     * Define the default configuration values required to setup this service
+     * i.e host, api key, or other values. Use Laravel validation rules for
+     *
+     * Laravel validation rules: https://laravel.com/docs/10.x/validation
+     *
+     * @return array
+     */
+    public static function setConfig(): array
+    {
+        return [];
+    }
+
+    /**
+     * Define the default package configuration values required when creatig
+     * new packages. i.e maximum ram usage, allowed databases and backups etc.
+     *
+     * Laravel validation rules: https://laravel.com/docs/10.x/validation
+     *
+     * @return array
+     */
+    public static function setPackageConfig(): array
+    {
+        return [];
+    }
+
+    /**
+     * Define the checkout config that is required at checkout and is fillable by
+     * the client. Its important to properly sanatize all inputted data with rules
+     *
+     * Laravel validation rules: https://laravel.com/docs/10.x/validation
+     *
+     * @return array
+     */
+    public static function setCheckoutConfig(): array
+    {
+        return [];    
+    }
+
+    /**
+     * Define buttons shown at order management page
+     *
+     * @return array
+     */
+    public static function setServiceButtons(): array
+    {
+        $login_to_panel = settings('encrypted::pterodactyl::sso_secret') ? [
+            "name" => __('client.login_to_panel'),
+            "icon" => '<i class="bx bx-terminal"></i>',
+            "color" => "primary",
+            "href" => route('pterodactyl.login'),
+            "target" => "_blank",
+        ] : [];
+
+        $server_ip = [
+            "name" => '123.456.83.231',
+            "color" => "primary",
+        ];
+
+        return [$login_to_panel, $server_ip];    
+    }
+    
     /**
      * This function is responsible for creating an instance of the
      * service. This can be anything such as a server, vps or any other instance.
