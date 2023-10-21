@@ -6,11 +6,11 @@ use App\Services\ServiceInterface;
 use App\Services\Pterodactyl\Entities\Egg;
 use App\Services\Pterodactyl\Entities\Pterodactyl;
 use App\Services\Pterodactyl\Entities\Location;
+use App\Services\Pterodactyl\Entities\Server;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Models\Package;
 use App\Models\Order;
 use App\Models\ErrorLog;
-use App\Services\Pterodactyl\Entities\Server;
-use Illuminate\Contracts\Container\BindingResolutionException;
 
 class Service implements ServiceInterface
 {
@@ -66,7 +66,7 @@ class Service implements ServiceInterface
      *
      * @return array
      */
-    public static function setPackageConfig(): array
+    public static function setPackageConfig(Package $package): array
     {
         return [];
     }
@@ -79,7 +79,7 @@ class Service implements ServiceInterface
      *
      * @return array
      */
-    public static function setCheckoutConfig(): array
+    public static function setCheckoutConfig(Package $package): array
     {
         return [];
     }
@@ -89,10 +89,9 @@ class Service implements ServiceInterface
      *
      * @return array
      */
-    public static function setServiceButtons(): array
+    public static function setServiceButtons(Order $order): array
     {
         $login_to_panel = settings('encrypted::pterodactyl::sso_secret') ? [
-            "type" => 'default',
             "name" => __('client.login_to_panel'),
             "icon" => '<i class="bx bx-terminal"></i>',
             "color" => "primary",
@@ -100,13 +99,11 @@ class Service implements ServiceInterface
             "target" => "_blank",
         ] : [];
 
+        $ip = Pterodactyl::serverIP($order->id);
         $server_ip = [
-            "type" => 'function',
-            'function' => 'getPteroServerIp',
-            'arg' => 'id', # order property
-            "name" => 'response',
-            'onclick' => 'copy',
-            "color" => "primary",
+            "name" => "",
+            "color" => "emerald",
+            "onclick" => "copyToClipboard($ip)",
         ];
 
         return [$login_to_panel, $server_ip];
