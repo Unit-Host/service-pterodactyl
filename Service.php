@@ -167,6 +167,29 @@ class Service implements ServiceInterface
 
         return $default;
     }
+    
+    /**
+     * This function is responsible for upgrading or downgrading an instance of
+     * the service. This method is called when a order is upgraded or downgraded
+     * 
+     * @return void
+    */
+    public function upgrade(Package $oldPackage, Package $newPackage)
+    {
+        $server = $this->server();
+        Pterodactyl::api()->servers->build($server['id'], [
+            'memory' => (integer) $newPackage->data('memory_limit', 0),
+            'swap' => (integer) $newPackage->data('swap_limit', 0),
+            'disk' => (integer) $newPackage->data('disk', 0),
+            'io' => (integer) $newPackage->data('block_io_weight', 500),
+            'cpu' => (integer) $newPackage->data('cpu', 100),
+            "feature_limits" => [
+                "databases" => (integer) $newPackage->data('database_limit', 0),
+                "backups" => (integer) $newPackage->data('backup_limit', 0),
+                "allocations" => (integer) $newPackage->data('allocation_limit', 0),
+            ]
+        ]);
+    }
 
     /**
      * This function is responsible for suspending an instance of the
