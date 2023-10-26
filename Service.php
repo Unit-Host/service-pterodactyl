@@ -101,9 +101,9 @@ class Service implements ServiceInterface
 
         $ip = Pterodactyl::serverIP($order->id);
         $server_ip = [
-            "name" => "",
+            "name" => $ip,
             "color" => "emerald",
-            "onclick" => "copyToClipboard($ip)",
+            "onclick" => "copyToClipboard(this)",
         ];
 
         return [$login_to_panel, $server_ip];
@@ -178,11 +178,12 @@ class Service implements ServiceInterface
     {
         $server = $this->server();
         Pterodactyl::api()->servers->build($server['id'], [
+            "allocation" => $server['allocation'],
             'memory' => (integer) $newPackage->data('memory_limit', 0),
             'swap' => (integer) $newPackage->data('swap_limit', 0),
-            'disk' => (integer) $newPackage->data('disk', 0),
+            'disk' => (integer) $newPackage->data('disk_limit', 0),
             'io' => (integer) $newPackage->data('block_io_weight', 500),
-            'cpu' => (integer) $newPackage->data('cpu', 100),
+            'cpu' => (integer) $newPackage->data('cpu_limit', 100),
             "feature_limits" => [
                 "databases" => (integer) $newPackage->data('database_limit', 0),
                 "backups" => (integer) $newPackage->data('backup_limit', 0),
