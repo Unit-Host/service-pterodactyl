@@ -236,6 +236,40 @@ class Service implements ServiceInterface
     }
 
     /**
+     * Change the Pterodactyl password
+    */
+    public function changePassword(Order $order, string $newPassword)
+    {
+        try {
+            // make api request
+            $pterodactyl_user = Pterodactyl::user($order->user);
+
+            if(!$order->hasExternalUser()) {
+                $order->createExternalUser([
+                    'external_id' => $pterodactyl_user['id'],
+                    'username' =>  $pterodactyl_user['email'],
+                    'password' => $newPassword,
+                    'data' => $pterodactyl_user,
+                ]);
+            }
+
+            $response = Pterodactyl::api()->users->update($pterodactyl_user['id'], [
+                'email' => $pterodactyl_user['email'],
+                'username' => $pterodactyl_user['username'],
+                'first_name' => $pterodactyl_user['first_name'],
+                'last_name' => $pterodactyl_user['last_name'],
+                'password' => $newPassword,
+            ]);
+
+            $order->updateExternalPassword($newPassword);
+        } catch(\Exception $error) {
+            return redirect()->back()->withError("Something went wrong, please try again.");
+        }
+
+        return redirect()->back()->withSuccess("Password has been changed");
+    }
+
+    /**
      * This function retrieves the Pterodactyl server belonging to this order
      * directly from the Pterodactyl API and returns the atributes of that server.
      *

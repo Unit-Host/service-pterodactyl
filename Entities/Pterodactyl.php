@@ -62,7 +62,7 @@ class Pterodactyl
         try {
             $pterodactyl_user = Pterodactyl::api()->users->getExternal("wmx-" . $user->id);
         } catch (\Exception $e) {
-            dd($e);
+            ErrorLog("pterodactyl::user", "Failed to retrieve Pterodactyl user from its external id wmx-{$user->id} : {$e->getMessage()}");
         }
 
         if ($pterodactyl_user->status() !== 200) {
