@@ -69,13 +69,7 @@ class Server
             }
             return $server;
         } catch (Exception $e) {
-            ErrorLog::create([
-                'user_id' => $this->order->user->id,
-                'order_id' => $this->order->id,
-                'source' => 'Pterodactyl Server Creation',
-                'severity' => 'CRITICAL',
-                'message' => $e->getMessage(),
-            ]);
+            ErrorLog('pterodactyl::service::create', $e->getMessage());
             throw new Exception('Errors encountered while creating the server ' . $e->getMessage());
         }
     }
