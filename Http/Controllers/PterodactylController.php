@@ -167,6 +167,10 @@ class PterodactylController extends Controller
             return redirect()->back()->with('error',$message);
         }
 
+        if(!isset($response['redirect'])) {
+            return redirect()->back()->withError('Failed to connect to Pterodactyl | The SSO package is no longer installed https://docs.wemx.net/en/third-party/pterodactyl#pterodactyl-sso');
+        }
+
         return redirect()->intended($response['redirect']);
     }
 }
