@@ -38,10 +38,10 @@ class Service implements ServiceInterface
     {
         return (object)
         [
-          'display_name' => 'Pterodactyl',
-          'autor' => 'WemX',
-          'version' => '1.0.0',
-          'wemx_version' => ['*'],
+            'display_name' => 'Pterodactyl',
+            'autor' => 'WemX',
+            'version' => '1.0.0',
+            'wemx_version' => ['*'],
         ];
     }
 
@@ -99,8 +99,9 @@ class Service implements ServiceInterface
             "target" => "_blank",
         ] : [];
 
-        $ip = Pterodactyl::serverIP($order->id);
+        $ip = trim(Pterodactyl::serverIP($order->id));
         $server_ip = [
+            "tag" => 'button',
             "name" => $ip,
             "color" => "emerald",
             "onclick" => "copyToClipboard(this)",
@@ -167,27 +168,27 @@ class Service implements ServiceInterface
 
         return $default;
     }
-    
+
     /**
      * This function is responsible for upgrading or downgrading an instance of
      * the service. This method is called when a order is upgraded or downgraded
-     * 
+     *
      * @return void
-    */
+     */
     public function upgrade(Package $oldPackage, Package $newPackage)
     {
         $server = $this->server();
         Pterodactyl::api()->servers->build($server['id'], [
             "allocation" => $server['allocation'],
-            'memory' => (integer) $newPackage->data('memory_limit', 0),
-            'swap' => (integer) $newPackage->data('swap_limit', 0),
-            'disk' => (integer) $newPackage->data('disk_limit', 0),
-            'io' => (integer) $newPackage->data('block_io_weight', 500),
-            'cpu' => (integer) $newPackage->data('cpu_limit', 100),
+            'memory' => (integer)$newPackage->data('memory_limit', 0),
+            'swap' => (integer)$newPackage->data('swap_limit', 0),
+            'disk' => (integer)$newPackage->data('disk_limit', 0),
+            'io' => (integer)$newPackage->data('block_io_weight', 500),
+            'cpu' => (integer)$newPackage->data('cpu_limit', 100),
             "feature_limits" => [
-                "databases" => (integer) $newPackage->data('database_limit', 0),
-                "backups" => (integer) $newPackage->data('backup_limit', 0),
-                "allocations" => (integer) $newPackage->data('allocation_limit', 0),
+                "databases" => (integer)$newPackage->data('database_limit', 0),
+                "backups" => (integer)$newPackage->data('backup_limit', 0),
+                "allocations" => (integer)$newPackage->data('allocation_limit', 0),
             ]
         ]);
     }
@@ -229,25 +230,25 @@ class Service implements ServiceInterface
         try {
             $server = $this->server();
             Pterodactyl::api()->servers->delete($server['id']);
-        } catch (\Exception $e){
-            request()->session()->flash('error' , $e->getMessage());
+        } catch (\Exception $e) {
+            request()->session()->flash('error', $e->getMessage());
         }
 
     }
 
     /**
      * Change the Pterodactyl password
-    */
+     */
     public function changePassword(Order $order, string $newPassword)
     {
         try {
             // make api request
             $pterodactyl_user = Pterodactyl::user($order->user);
 
-            if(!$order->hasExternalUser()) {
+            if (!$order->hasExternalUser()) {
                 $order->createExternalUser([
                     'external_id' => $pterodactyl_user['id'],
-                    'username' =>  $pterodactyl_user['email'],
+                    'username' => $pterodactyl_user['email'],
                     'password' => $newPassword,
                     'data' => $pterodactyl_user,
                 ]);
@@ -262,7 +263,7 @@ class Service implements ServiceInterface
             ]);
 
             $order->updateExternalPassword($newPassword);
-        } catch(\Exception $error) {
+        } catch (\Exception $error) {
             return redirect()->back()->withError("Something went wrong, please try again.");
         }
 
