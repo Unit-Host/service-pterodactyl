@@ -13,6 +13,7 @@ use JetBrains\PhpStorm\NoReturn;
 class Server
 {
     private PteroApi $api;
+    public ?Node $node = null;
     private Order $order;
     private string $external_id;
     private string $name;
@@ -87,9 +88,21 @@ class Server
         return $this->egg['model'];
     }
 
-    public function node(): Node
+    /**
+     * @throws Exception
+     */
+    public function node(): void
     {
-        return Node::query()->where('location_id', $this->location()->location_id)->first();
+        $nodes = Node::query()->where('location_id', $this->location()->location_id)->get();
+        $memory_limit = $this->order->package['data']['memory_limit'];
+        $disk_limit = $this->order->package['data']['disk_limit'];
+        foreach ($nodes as $node) {
+            if ($node->checkResource($memory_limit, $disk_limit)) {
+                $this->node = $node;
+                return;
+            }
+        }
+//        return throw new \Exception("[Pterodactyl] No Nodes available, or all Nodes are full");
     }
 
     public function generateParam(): void
@@ -129,6 +142,7 @@ class Server
         $this->setEnvironment();
         $this->setAllocationsIds();
         $this->egg();
+        $this->node();
         $this->prepareEnvAllocations();
         $this->generateParam();
     }
@@ -166,10 +180,10 @@ class Server
                     $env[$key] = Str::random(10);
                     break;
                 case 'RANDOM_NUMBER':
-                    $env[$key] = (int) substr(Str::random(10), 0, 10);
+                    $env[$key] = (int)substr(Str::random(10), 0, 10);
                     break;
                 case 'NODE_IP':
-                    $env[$key] = $this->node()->ip;
+                    $env[$key] = $this->node->ip;
                     break;
                 default:
                     $env[$key] = $value;
@@ -177,7 +191,7 @@ class Server
         }
 
         $i = -1;
-        foreach ($this->node()->fetchRequiredFreePorts($this->port_count) as $allocation_id => $port) {
+        foreach ($this->node->fetchRequiredFreePorts($this->port_count) as $allocation_id => $port) {
             if ($i == -1) {
                 $allocations_ids['default'] = $allocation_id;
                 $i++;

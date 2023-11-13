@@ -257,11 +257,9 @@ class Node extends Model
     public function checkResource(int $requiredMemory, int $requiredDisk): bool
     {
         $nodeData = $this->getApiNode();
-        $nodeResources = self::calculateNodeResources($nodeData[$this->node_id]);
-
+        $nodeResources = self::calculateNodeResources($nodeData);
         $requiredMemoryPercent = ($requiredMemory / $nodeResources['memory']['total']) * 100;
         $requiredDiskPercent = ($requiredDisk / $nodeResources['disk']['total']) * 100;
-
         if ($requiredMemoryPercent > $nodeResources['memory']['available_percent'] ||
             $requiredDiskPercent > $nodeResources['disk']['available_percent']) {
             return false;
