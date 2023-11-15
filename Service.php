@@ -81,7 +81,51 @@ class Service implements ServiceInterface
      */
     public static function setCheckoutConfig(Package $package): array
     {
-        return [];
+        $locations = collect($package->data('locations', []));
+
+        $locations = $locations->mapWithKeys(function (int $location, int $key) {
+            $location = Location::find($location);
+            if($location->stock == 0) {
+                return [];
+            }
+
+            return [$location->id => $location->name . " ({$location->inStock()})"];
+        });
+
+        $variables = collect(json_decode($package->data('egg'))->relationships->variables->data ?? []);
+
+        $variable_forms = $variables->map(function ($variable, int $key) use ($package) {
+            $variable = $variable->attributes;
+
+            if(!$variable->user_viewable OR in_array($variable->env_variable, $package->data('excluded_variables', []))) {
+                return [];
+            }
+
+            return
+                [
+                    "key" => $variable->env_variable,
+                    "name" => $variable->name,
+                    "description" => $variable->description,
+                    "type" => "text",
+                    "default_value" => $variable->default_value,
+                    "rules" => explode('|', $variable->rules), // laravel validation rules
+                ];
+        });
+
+        $variable_forms = $variable_forms->filter()->values();
+
+        return
+        array_merge(
+            [[
+                "key" => "location",
+                "name" => "Server Location ",
+                "description" => "Where do you want us to deploy your server?",
+                "type" => "select",
+                "options" => $locations,
+                "rules" => ['required'],
+            ]],
+            $variable_forms->all()
+            );
     }
 
     /**
