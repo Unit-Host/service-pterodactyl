@@ -11,6 +11,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Models\Package;
 use App\Models\Order;
 use App\Models\ErrorLog;
+use Illuminate\Support\Str;
 
 class Service implements ServiceInterface
 {
@@ -101,14 +102,16 @@ class Service implements ServiceInterface
                 return [];
             }
 
+            $rules = explode('|', $variable->rules); // convert into array format
+
             return
                 [
-                    "key" => $variable->env_variable,
+                    "key" => "variable[{$variable->env_variable}]",
                     "name" => $variable->name,
                     "description" => $variable->description,
-                    "type" => "text",
-                    "default_value" => $variable->default_value,
-                    "rules" => explode('|', $variable->rules), // laravel validation rules
+                    "type" => (in_array('boolean', $rules)) ? "bool" : "text",
+                    "default_value" => $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '',
+                    "rules" => $rules, // laravel validation rules
                 ];
         });
 
