@@ -103,16 +103,27 @@ class Service implements ServiceInterface
             }
 
             $rules = explode('|', $variable->rules); // convert into array format
+            $type_data = self::determineType($rules);
 
-            return
-                [
-                    "key" => "variable[{$variable->env_variable}]",
-                    "name" => $variable->name,
-                    "description" => $variable->description,
-                    "type" => (in_array('boolean', $rules)) ? "bool" : "text",
-                    "default_value" => $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '',
-                    "rules" => $rules, // laravel validation rules
-                ];
+            $resp = [
+                "key" => $variable->env_variable,
+                'col' => 'w-1/2 p-2',
+                "name" => $variable->name,
+                "description" => $variable->description,
+                "type" => $type_data['type'],
+                "default_value" => $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '',
+                "rules" => $rules, // laravel validation rules
+                'required' => in_array('required', $rules),
+            ];
+            if ($type_data['type'] == 'select') {
+                $resp['options'] = $type_data['options'];
+            }
+            if ($type_data['type'] == 'number') {
+                $resp['max'] = $type_data['max'] ?? '';
+                $resp['min'] = $type_data['min'] ?? 0;
+            }
+            return $resp;
+
         });
 
         $variable_forms = $variable_forms->filter()->values();
@@ -121,15 +132,47 @@ class Service implements ServiceInterface
         array_merge(
             [[
                 "key" => "location",
+                'col' => 'w-1/2 p-2',
                 "name" => "Server Location ",
                 "description" => "Where do you want us to deploy your server?",
                 "type" => "select",
                 "options" => $locations,
                 "rules" => ['required'],
+                'required' => true
             ]],
             $variable_forms->all()
             );
     }
+
+    private static function determineType(array $rules): array {
+        $response = ['type' => 'text'];
+        $rulesString = implode('|', $rules);
+
+        // Check for boolean or bool
+        if (in_array('boolean', $rules) || in_array('bool', $rules)) {
+            $response['type'] = 'bool';
+        } elseif (preg_match('/\|in:true,false(.*)/', $rulesString, $matches)) {
+            // Checking for a specific pattern of 'in:' that indicates a boolean
+            $response['type'] = 'bool';
+        } elseif (preg_match('/\|in:(.*)/', $rulesString, $matches)) {
+            // Select type for 'in:' rule
+            $response['type'] = 'select';
+            $response['options'] = explode(',', $matches[1]);
+        } elseif (in_array('numeric', $rules)) {
+            // Type for 'numeric' rule
+            $response['type'] = 'number';
+            // Finding the maximum value
+            if (preg_match('/max:(\d+)/', $rulesString, $maxMatches)) {
+                $response['max'] = $maxMatches[1];
+            }
+            // Finding the minimum value
+            if (preg_match('/min:(\d+)/', $rulesString, $minMatches)) {
+                $response['min'] = $minMatches[1];
+            }
+        }
+        return $response;
+    }
+
 
     /**
      * Define buttons shown at order management page
