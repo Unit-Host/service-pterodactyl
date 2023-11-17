@@ -116,7 +116,7 @@ class Service implements ServiceInterface
                 'required' => in_array('required', $rules),
             ];
             if ($type_data['type'] == 'select') {
-                $resp['options'] = $type_data['options'];
+                $resp['options'] = array_combine((array)$type_data['options'], (array)$type_data['options']);
             }
             if ($type_data['type'] == 'number') {
                 $resp['max'] = $type_data['max'] ?? '';
