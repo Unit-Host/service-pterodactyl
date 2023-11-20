@@ -86,15 +86,13 @@ class Service implements ServiceInterface
 
         $locations = $locations->mapWithKeys(function (int $location, int $key) {
             $location = Location::find($location);
-            if($location->stock == 0) {
+            if($location == null or $location->stock == 0) {
                 return [];
             }
-
             return [$location->id => $location->name . " ({$location->inStock()})"];
         });
 
         $variables = collect(json_decode($package->data('egg'))->relationships->variables->data ?? []);
-
         $variable_forms = $variables->map(function ($variable, int $key) use ($package) {
             $variable = $variable->attributes;
 
@@ -104,10 +102,8 @@ class Service implements ServiceInterface
 
             // Get the value of the variable
             $variableValue = $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '';
-
             // List of placeholders
             $placeholders = ['AUTO_PORT', 'USERNAME', 'RANDOM_TEXT', 'RANDOM_NUMBER', 'NODE_IP'];
-
             // Check for placeholder
             if (in_array($variableValue, $placeholders)) {
                 // Skip validation for this variable

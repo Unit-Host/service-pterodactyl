@@ -93,16 +93,16 @@ class Server
      */
     public function node(): void
     {
-        $nodes = Node::query()->where('location_id', $this->location()->location_id)->get();
-        $memory_limit = $this->order->package['data']['memory_limit'];
-        $disk_limit = $this->order->package['data']['disk_limit'];
-        foreach ($nodes as $node) {
-            if ($node->checkResource($memory_limit, $disk_limit)) {
-                $this->node = $node;
-                return;
-            }
-        }
-//        return throw new \Exception("[Pterodactyl] No Nodes available, or all Nodes are full");
+        $this->node = Node::query()->where('location_id', $this->location()->location_id)->first();
+//        $nodes = Node::query()->where('location_id', $this->location()->location_id)->get();
+//        $memory_limit = $this->order->package['data']['memory_limit'];
+//        $disk_limit = $this->order->package['data']['disk_limit'];
+//        foreach ($nodes as $node) {
+//            if ($node->checkResource($memory_limit, $disk_limit)) {
+//                $this->node = $node;
+//                return;
+//            }
+//        }
     }
 
     public function generateParam(): void
