@@ -167,26 +167,20 @@ class Server
         $replace_port_keys = [];
         $allocations_ids = [];
         foreach ($this->getEnvironment() as $key => $value) {
-            switch ($value) {
-                case 'AUTO_PORT':
-                    $env[$key] = 'AUTO_PORT';
-                    $replace_port_keys[] = $key;
-                    $this->port_count = $this->port_count + 1;
-                    break;
-                case 'USERNAME':
-                    $env[$key] = auth()->user()->username;
-                    break;
-                case 'RANDOM_TEXT':
-                    $env[$key] = Str::random(10);
-                    break;
-                case 'RANDOM_NUMBER':
-                    $env[$key] = (int)substr(Str::random(10), 0, 10);
-                    break;
-                case 'NODE_IP':
-                    $env[$key] = $this->node->ip;
-                    break;
-                default:
-                    $env[$key] = $value;
+            if (str_contains($value, 'AUTO_PORT')) {
+                $env[$key] = 'AUTO_PORT';
+                $replace_port_keys[] = $key;
+                $this->port_count = $this->port_count + 1;
+            } elseif (str_contains($value, 'USERNAME')) {
+                $env[$key] = str_replace('USERNAME', auth()->user()->username, $value);
+            } elseif (str_contains($value, 'RANDOM_TEXT')) {
+                $env[$key] = str_replace('RANDOM_TEXT', Str::random(10), $value);
+            } elseif (str_contains($value, 'RANDOM_NUMBER')) {
+                $env[$key] = str_replace('RANDOM_NUMBER', (int)substr(Str::random(10), 0, 10), $value);
+            } elseif (str_contains($value, 'NODE_IP')) {
+                $env[$key] = str_replace('NODE_IP', $this->node->ip, $value);
+            } else {
+                $env[$key] = $value;
             }
         }
 
