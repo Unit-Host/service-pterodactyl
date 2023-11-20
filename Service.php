@@ -102,6 +102,18 @@ class Service implements ServiceInterface
                 return [];
             }
 
+            // Get the value of the variable
+            $variableValue = $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '';
+
+            // List of placeholders
+            $placeholders = ['AUTO_PORT', 'USERNAME', 'RANDOM_TEXT', 'RANDOM_NUMBER', 'NODE_IP'];
+
+            // Check for placeholder
+            if (in_array($variableValue, $placeholders)) {
+                // Skip validation for this variable
+                return [];
+            }
+
             $rules = explode('|', $variable->rules); // convert into array format
             $type_data = self::determineType($rules);
 
@@ -111,10 +123,11 @@ class Service implements ServiceInterface
                 "name" => $variable->name,
                 "description" => $variable->description,
                 "type" => $type_data['type'],
-                "default_value" => $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '',
+                "default_value" => $variableValue,
                 "rules" => $rules, // laravel validation rules
                 'required' => in_array('required', $rules),
             ];
+
             if ($type_data['type'] == 'select') {
                 $resp['options'] = array_combine((array)$type_data['options'], (array)$type_data['options']);
             }
@@ -150,9 +163,6 @@ class Service implements ServiceInterface
 
         // Check for boolean or bool
         if (in_array('boolean', $rules) || in_array('bool', $rules)) {
-            $response['type'] = 'bool';
-        } elseif (preg_match('/\|in:true,false(.*)/', $rulesString, $matches)) {
-            // Checking for a specific pattern of 'in:' that indicates a boolean
             $response['type'] = 'bool';
         } elseif (preg_match('/\|in:(.*)/', $rulesString, $matches)) {
             // Select type for 'in:' rule
