@@ -103,7 +103,7 @@ class Service implements ServiceInterface
             // Get the value of the variable
             $variableValue = $package->data("environment")[$variable->env_variable] ?? $variable->default_value ?? '';
             // List of placeholders
-            $placeholders = ['AUTO_PORT', 'USERNAME', 'RANDOM_TEXT', 'RANDOM_NUMBER', 'NODE_IP'];
+            $placeholders = ['AUTO_PORT', 'USERNAME', 'RANDOM_TEXT', 'RANDOM_NUMBER', 'NODE_IP', 'PASSWORD'];
             // Check for placeholder
             if (in_array($variableValue, $placeholders)) {
                 // Skip validation for this variable

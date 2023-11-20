@@ -308,6 +308,7 @@ class Node extends Model
     {
         foreach (self::query()->get() as $node){
             Cache::forget("api_node_{$node->node_id}");
+            $node->delete();
         }
     }
 }

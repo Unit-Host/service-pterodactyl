@@ -179,6 +179,11 @@ class Server
                 $env[$key] = str_replace('RANDOM_NUMBER', (int)substr(Str::random(10), 0, 10), $value);
             } elseif (str_contains($value, 'NODE_IP')) {
                 $env[$key] = str_replace('NODE_IP', $this->node->ip, $value);
+            } elseif (str_contains($value, 'PASSWORD')) {
+                $username = auth()->user()->username;
+                $maxRandomStringLength = 16 - strlen($username);
+                $randomStringWithSymbols = $username . substr(str_shuffle('?!@$' . Str::random($maxRandomStringLength)), 0, $maxRandomStringLength);
+                $env[$key] = str_replace('PASSWORD', $randomStringWithSymbols, $value);
             } else {
                 $env[$key] = $value;
             }
@@ -197,18 +202,6 @@ class Server
         }
         $this->setEnvironment($this->convertValuesAccordingToRules($env));
         $this->setAllocationsIds($allocations_ids);
-    }
-
-    private function arrayValueToString(array $array): array
-    {
-        foreach ($array as $key => &$value) {
-            if (is_array($value)) {
-                $value = $this->arrayValueToString($value);
-            } else {
-                $value = strval($value);
-            }
-        }
-        return $array;
     }
 
     private function package(string $key, mixed $default = NULL): mixed

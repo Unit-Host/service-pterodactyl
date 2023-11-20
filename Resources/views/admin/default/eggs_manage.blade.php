@@ -29,12 +29,13 @@
                        onclick="return confirm('{!! __('admin.clear_cache_desc') !!}')">{!! __('admin.pterodactyl_cache_btn_desc') !!} {!! __('admin.clear_cache') !!}</a><br>
 {{--                    <span>{!! __('admin.available_placeholders') !!}  <strong>AUTO_PORT, USERNAME, RANDOM_TEXT, RANDOM_NUMBER, NODE_IP</strong></span>--}}
                     <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#placeholdersInfo" aria-expanded="false" aria-controls="placeholdersInfo">
-                        <span>{!! __('admin.available_placeholders') !!}  <strong>AUTO_PORT, USERNAME, RANDOM_TEXT, RANDOM_NUMBER, NODE_IP</strong></span>
+                        <span>{!! __('admin.available_placeholders') !!}  <strong>AUTO_PORT, USERNAME, PASSWORD, RANDOM_TEXT, RANDOM_NUMBER, NODE_IP</strong></span>
                     </button>
                     <div class="collapse m-3" id="placeholdersInfo">
                         <p>Placeholders work for any variable</p>
                         <p><strong>AUTO_PORT</strong> - Generates a port and adds additional allocation for the server</p>
                         <p><strong>USERNAME</strong> - Assigns the username to the variable</p>
+                        <p><strong>PASSWORD</strong> - Generates a password using the username and special characters</p>
                         <p><strong>RANDOM_TEXT</strong> - Generates a random text of 10 characters</p>
                         <p><strong>RANDOM_NUMBER</strong> - Generates a 10-digit random number</p>
                         <p><strong>NODE_IP</strong> - Sets the IP address of the node being used</p>
