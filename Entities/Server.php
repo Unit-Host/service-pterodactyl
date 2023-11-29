@@ -93,7 +93,6 @@ class Server
      */
     public function node(): void
     {
-//        $this->node = Node::query()->where('location_id', $this->location()->location_id)->first();
         $nodes = Node::query()->where('location_id', $this->location()->location_id)->get();
         $memory_limit = $this->order->package['data']['memory_limit'];
         $disk_limit = $this->order->package['data']['disk_limit'];
@@ -103,6 +102,17 @@ class Server
                 return;
             }
         }
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    private function api(): PteroApi
+    {
+        if (!isset($this->api)) {
+            $this->api = Pterodactyl::api();
+        }
+        return $this->api;
     }
 
     public function generateParam(): void
@@ -145,17 +155,6 @@ class Server
         $this->node();
         $this->prepareEnvAllocations();
         $this->generateParam();
-    }
-
-    /**
-     * @throws BindingResolutionException
-     */
-    private function api(): PteroApi
-    {
-        if (!isset($this->api)) {
-            $this->api = Pterodactyl::api();
-        }
-        return $this->api;
     }
 
     /**
