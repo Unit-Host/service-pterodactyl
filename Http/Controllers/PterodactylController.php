@@ -145,14 +145,14 @@ class PterodactylController extends Controller
     /**
      * Redirect the user to Pterodactyl and log them in
      */
-    public function loginPanel()
+    public function loginPanel(Order $order)
     {
         $url = settings('encrypted::pterodactyl::api_url') . '/sso-wemx';
         $secret = settings('encrypted::pterodactyl::sso_secret');
 
         $response = Http::get($url, [
             'sso_secret' => $secret,
-            'user_id' => Pterodactyl::user()['id']
+            'user_id' => Pterodactyl::user($order->user)['id']
         ]);
 
         if (!$response->successful()){

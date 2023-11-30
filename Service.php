@@ -191,7 +191,7 @@ class Service implements ServiceInterface
             "name" => __('client.login_to_panel'),
             "icon" => '<i class="bx bx-terminal"></i>',
             "color" => "primary",
-            "href" => route('pterodactyl.login'),
+            "href" => route('pterodactyl.login', $order->id),
             "target" => "_blank",
         ] : [];
 
@@ -204,6 +204,20 @@ class Service implements ServiceInterface
         ];
 
         return [$login_to_panel, $server_ip];
+    }
+
+    /**
+     * Define custom permissions for this service
+     *
+     * @return array
+     */
+    public static function permissions(): array
+    {
+        return [
+            'pterodactyl.login' => [
+                'description' => 'Can this user automatically login to Pterodactyl',
+            ],
+        ];
     }
 
     /**
