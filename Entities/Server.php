@@ -103,7 +103,7 @@ class Server
             }
         }
         if ($this->node == null){
-            redirect()->back()->send()->with('error', 'The node is full. Report this to an administrator');
+            redirect()->back()->send()->with('error', __('client.node_full'));
         }
     }
 
