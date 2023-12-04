@@ -41,7 +41,9 @@ class Pterodactyl
         foreach ($nests['data'] as $nest) {
             $nested_eggs = Pterodactyl::api()->eggs->all($nest['attributes']['id'])->json();
             // Merge the eggs with the existing eggs array
-            $eggs = array_merge($eggs, $nested_eggs['data']);
+            if (array_key_exists('data', $nested_eggs)){
+                $eggs = array_merge($eggs, $nested_eggs['data']);
+            }
         }
 
         return collect($eggs);
