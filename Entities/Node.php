@@ -257,6 +257,9 @@ class Node extends Model
     public function checkResource(int $requiredMemory, int $requiredDisk): bool
     {
         $nodeData = $this->getApiNode();
+        if ($nodeData['disk_overallocate'] == '-1' and  $nodeData['memory_overallocate'] == '-1'){
+            return true;
+        }
         $nodeResources = self::calculateNodeResources($nodeData);
         $requiredMemoryPercent = ($requiredMemory / $nodeResources['memory']['total']) * 100;
         $requiredDiskPercent = ($requiredDisk / $nodeResources['disk']['total']) * 100;
