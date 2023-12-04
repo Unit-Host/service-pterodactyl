@@ -102,6 +102,9 @@ class Server
                 return;
             }
         }
+        if ($this->node == null){
+            redirect()->back()->send()->with('error', 'The node is full. Report this to an administrator');
+        }
     }
 
     /**
