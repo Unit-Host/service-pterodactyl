@@ -165,6 +165,7 @@ class Server
         $env = [];
         $replace_port_keys = [];
         $allocations_ids = [];
+
         foreach ($this->getEnvironment() as $key => $value) {
             if (str_contains($value, 'AUTO_PORT')) {
                 $env[$key] = 'AUTO_PORT';
@@ -317,6 +318,9 @@ class Server
         $packageEnv = is_array($this->package('environment', [])) ? $this->package('environment', []) : [];
         $eggModelEnv = is_array($this->eggModel()->env()) ? $this->eggModel()->env() : [];
         $clientEnv = is_array($this->option('environment', [])) ? $this->option('environment', []) : [];
+        if (!count($clientEnv)){
+            $clientEnv = is_array($this->order->options) ? $this->order->options : [];
+        }
         if (empty($environment)) {
             $env = array_merge($eggModelEnv, $packageEnv, $clientEnv);
         } else {
