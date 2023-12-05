@@ -52,7 +52,7 @@ class Pterodactyl
     /**
      * retrieve the Pterodactyl user from external_id
      *
-     * @return array
+     * @return User
      * @throws BindingResolutionException
      */
     public static function user($user = false)
@@ -105,7 +105,7 @@ class Pterodactyl
         // check whether a user with same email as authenticated user already exists on Pterodactyl
         // this is mainly for users that are migrating over and have existing pterodactyl users
         $user = Pterodactyl::api()->users->all("?filter[email]=" . $authUser->email);
-//        $user = Pterodactyl::api()->users->getExternal("wmx-" . $authUser->id);
+
         if (isset($user['data'][0]['attributes'])) {
 
             // edit this users external id so next call it gets easier.
@@ -125,7 +125,7 @@ class Pterodactyl
         $user = [
             'external_id' => (string)"wmx-" . $authUser->id,
             'email' => $authUser->email,
-            'username' => $authUser->username . rand(1, 1000),
+            'username' => $authUser->username . '-wemx',
             'first_name' => $authUser->first_name,
             'last_name' => $authUser->last_name,
         ];
