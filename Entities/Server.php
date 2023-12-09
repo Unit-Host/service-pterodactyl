@@ -93,7 +93,7 @@ class Server
      */
     public function node(): void
     {
-        $nodes = Node::query()->whereIn('location_id', $this->package('locations'))->get();
+        $nodes = $this->location()->nodes()->get();
         $memory_limit = $this->order->package['data']['memory_limit'];
         $disk_limit = $this->order->package['data']['disk_limit'];
         foreach ($nodes as $node) {
@@ -102,7 +102,7 @@ class Server
                 return;
             }
         }
-        if ($this->node == null){
+        if ($this->node == null) {
             redirect()->back()->send()->with('error', __('client.node_full'));
         }
     }
@@ -215,17 +215,13 @@ class Server
         return $default;
     }
 
-    private function location($location_id = 0)
+    private function location()
     {
-        if ($location_id == 0){
-            $location_id = $this->order->options['location'] ?? $this->package('locations')[0] ?? null;
-            if (isset($location_id)) {
-                return Location::find($location_id);
-            }
-            return Location::where('stock', '!=', 0)->first();
+        $location_id = $this->order->options['location'] ?? $this->package('locations')[0] ?? null;
+        if (isset($location_id)) {
+            return Location::find($location_id);
         }
-        return Location::find($location_id);
-
+        return Location::where('stock', '!=', 0)->first();
     }
 
     private function option(string $key, mixed $default = NULL): mixed
@@ -325,7 +321,7 @@ class Server
         $packageEnv = is_array($this->package('environment', [])) ? $this->package('environment', []) : [];
         $eggModelEnv = is_array($this->eggModel()->env()) ? $this->eggModel()->env() : [];
         $clientEnv = is_array($this->option('environment', [])) ? $this->option('environment', []) : [];
-        if (!count($clientEnv)){
+        if (!count($clientEnv)) {
             $clientEnv = is_array($this->order->options) ? $this->order->options : [];
         }
         if (empty($environment)) {
@@ -333,10 +329,10 @@ class Server
         } else {
             $env = array_merge($eggModelEnv, $packageEnv, $clientEnv, $environment);
         }
-        if (array_key_exists('location', $env) ){
+        if (array_key_exists('location', $env)) {
             unset($env['location']);
         }
-        if (array_key_exists('coupon', $env)){
+        if (array_key_exists('coupon', $env)) {
             unset($env['coupon']);
         }
         $this->environment = $env;

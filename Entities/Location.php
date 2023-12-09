@@ -14,19 +14,25 @@ use Illuminate\Database\Eloquent\Model;
 class Location extends Model
 {
     use HasFactory;
+
     protected $table = 'pterodactyl_locations';
 
     public function inStock(): string
     {
-        if($this->stock == -1 OR $this->stock > 15) {
+        if ($this->stock == -1 or $this->stock > 15) {
             return 'In stock';
         }
 
         if ($this->stock >= 1 && $this->stock <= 15) {
-            return $this->stock .' units left';
+            return $this->stock . ' units left';
         }
 
         return __('admin.out_of_stock');
+    }
+
+    public function nodes(): \Illuminate\Database\Eloquent\Builder
+    {
+        return Node::query()->where('location_id', $this->location_id);
     }
 
 }
