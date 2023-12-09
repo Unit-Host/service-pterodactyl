@@ -217,7 +217,6 @@ class Node extends Model
             if (empty($node)) {
                 throw new Exception(self::NODE_NOT_FOUND_ERROR);
             }
-            $node['attributes']['resources'] = self::calculateNodeResources($node['attributes']);
             return $node['attributes'];
         } catch (Exception $e) {
             throw new Exception(self::API_NODE_FETCH_ERROR . $e->getMessage());
@@ -240,7 +239,6 @@ class Node extends Model
             }
             return array_reduce($nodes, function ($carry, $item) {
                 $carry[$item['attributes']['id']] = $item['attributes'];
-                $carry[$item['attributes']['id']]['resources'] = self::calculateNodeResources($carry[$item['attributes']['id']]);
                 return $carry;
             }, []);
         } catch (Exception $e) {
@@ -257,46 +255,28 @@ class Node extends Model
     public function checkResource(int $requiredMemory, int $requiredDisk): bool
     {
         $nodeData = $this->getApiNode();
-        if ($nodeData['disk_overallocate'] == '-1' and  $nodeData['memory_overallocate'] == '-1'){
+        if ($nodeData['disk_overallocate'] == -1 and  $nodeData['memory_overallocate'] == -1){
             return true;
         }
-        $nodeResources = self::calculateNodeResources($nodeData);
-        $requiredMemoryPercent = ($requiredMemory / $nodeResources['memory']['total']) * 100;
-        $requiredDiskPercent = ($requiredDisk / $nodeResources['disk']['total']) * 100;
-        if ($requiredMemoryPercent > $nodeResources['memory']['available_percent'] ||
-            $requiredDiskPercent > $nodeResources['disk']['available_percent']) {
+
+        $totalMemory = $nodeData['memory'];
+        $usedMemory = $nodeData['allocated_resources']['memory'];
+        $totalDisk = $nodeData['disk'];
+        $usedDisk = $nodeData['allocated_resources']['disk'];
+        $availableMemory = $totalMemory - $usedMemory;
+        $availableDisk = $totalDisk - $usedDisk;
+
+        if ($availableDisk >= $requiredDisk and $availableMemory >= $requiredMemory){
+            return true;
+        } else {
+            ErrorLog('pterodactyl::checkResource', 'Node name: ' . $nodeData['name'] . ' is full', 'INFO');
             return false;
         }
-        return true;
     }
 
-    /**
-     * @param array $node ['attributes']
-     * @return array[]
-     */
-    public static function calculateNodeResources(array $node): array
-    {
-        return [
-            'memory' => self::calculateResourcePercent($node['memory'], $node['allocated_resources']['memory']),
-            'disk' => self::calculateResourcePercent($node['disk'], $node['allocated_resources']['disk']),
-        ];
-    }
 
-    /**
-     * @param int $total
-     * @param int $used
-     * @return array
-     */
-    private
-    static function calculateResourcePercent(int $total, int $used): array
-    {
-        $availablePercent = round((($total - $used) / $total) * 100, 2);
-        return [
-            'total' => $total,
-            'used' => $used,
-            'available_percent' => $availablePercent,
-        ];
-    }
+
+
 
     /**
      * Clears the node api cache of this object
