@@ -255,7 +255,8 @@ class Node extends Model
     public function checkResource(int $requiredMemory, int $requiredDisk): bool
     {
         $nodeData = $this->getApiNode();
-        if ($nodeData['disk_overallocate'] == -1 and  $nodeData['memory_overallocate'] == -1){
+
+        if ($nodeData['memory_overallocate'] == -1 and  $nodeData['disk_overallocate'] == -1){
             return true;
         }
 
@@ -263,10 +264,15 @@ class Node extends Model
         $usedMemory = $nodeData['allocated_resources']['memory'];
         $totalDisk = $nodeData['disk'];
         $usedDisk = $nodeData['allocated_resources']['disk'];
-        $availableMemory = $totalMemory - $usedMemory;
-        $availableDisk = $totalDisk - $usedDisk;
 
-        if ($availableDisk >= $requiredDisk and $availableMemory >= $requiredMemory){
+        // Calculation of allowed resources taking into account overallocate
+        $totalMemoryAvailable = $totalMemory + round($totalMemory * ($nodeData['memory_overallocate'] / 100));
+        $totalDiskAvailable = $totalDisk + round($totalDisk * ($nodeData['disk_overallocate'] / 100));
+
+        $availableMemory = $totalMemoryAvailable - $usedMemory;
+        $availableDisk = $totalDiskAvailable - $usedDisk;
+
+        if ($availableDisk >= $requiredDisk && $availableMemory >= $requiredMemory) {
             return true;
         } else {
             ErrorLog('pterodactyl::checkResource', 'Node name: ' . $nodeData['name'] . ' is full', 'INFO');
