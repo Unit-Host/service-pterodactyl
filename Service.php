@@ -2,6 +2,7 @@
 
 namespace App\Services\Pterodactyl;
 
+use App\Services\Pterodactyl\Entities\Node;
 use App\Services\ServiceInterface;
 use App\Services\Pterodactyl\Entities\Egg;
 use App\Services\Pterodactyl\Entities\Pterodactyl;
@@ -82,15 +83,17 @@ class Service implements ServiceInterface
      */
     public static function setCheckoutConfig(Package $package): array
     {
-        $locations = collect($package->data('locations', []));
-
-        $locations = $locations->mapWithKeys(function (int $location, int $key) {
-            $location = Location::find($location);
-            if($location == null or $location->stock == 0) {
-                return [];
+        $locations = Location::query()->whereIn('id', $package->data('locations', []))->get();
+        $locations_options = [];
+        $memory_limit = $package['data']['memory_limit'];
+        $disk_limit = $package['data']['disk_limit'];
+        foreach ($locations as $location){
+            foreach ($location->nodes()->get() as $node){
+                if ($node->checkResource($memory_limit, $disk_limit)){
+                    $locations_options[$location->id] = $location->name . " ({$location->inStock()})";
+                }
             }
-            return [$location->id => $location->name . " ({$location->inStock()})"];
-        });
+        }
 
         $variables = collect(json_decode($package->data('egg'))->relationships->variables->data ?? []);
         $variable_forms = $variables->map(function ($variable, int $key) use ($package) {
@@ -143,9 +146,10 @@ class Service implements ServiceInterface
                 "key" => "location",
                 'col' => 'w-1/2 p-2',
                 "name" => "Server Location ",
-                "description" => "Where do you want us to deploy your server?",
+                "description" =>  count($locations_options) ? "Where do you want us to deploy your server?" : "There are no available server locations. Contact an administrator",
                 "type" => "select",
-                "options" => $locations,
+                "disabled" => !count($locations_options),
+                "options" => $locations_options,
                 "rules" => ['required'],
                 'required' => true
             ]],
