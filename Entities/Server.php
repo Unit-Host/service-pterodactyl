@@ -168,6 +168,7 @@ class Server
         $env = [];
         $replace_port_keys = [];
         $allocations_ids = [];
+        $username = $this->order->user->username ?? request()->user()->username ?? auth()->user()->username ?? config('app.name');
 
         foreach ($this->getEnvironment() as $key => $value) {
             if (str_contains($value, 'AUTO_PORT')) {
@@ -175,7 +176,7 @@ class Server
                 $replace_port_keys[] = $key;
                 $this->port_count = $this->port_count + 1;
             } elseif (str_contains($value, 'USERNAME')) {
-                $env[$key] = str_replace('USERNAME', auth()->user()->username, $value);
+                $env[$key] = str_replace('USERNAME', $username, $value);
             } elseif (str_contains($value, 'RANDOM_TEXT')) {
                 $env[$key] = str_replace('RANDOM_TEXT', Str::random(10), $value);
             } elseif (str_contains($value, 'RANDOM_NUMBER')) {
@@ -183,7 +184,6 @@ class Server
             } elseif (str_contains($value, 'NODE_IP')) {
                 $env[$key] = str_replace('NODE_IP', $this->node->ip, $value);
             } elseif (str_contains($value, 'PASSWORD')) {
-                $username = auth()->user()->username;
                 $maxRandomStringLength = 16 - strlen($username);
                 $randomStringWithSymbols = $username . substr(str_shuffle('?!@$' . Str::random($maxRandomStringLength)), 0, $maxRandomStringLength);
                 $env[$key] = str_replace('PASSWORD', $randomStringWithSymbols, $value);
